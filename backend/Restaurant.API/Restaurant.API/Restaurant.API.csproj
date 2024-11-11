@@ -10,11 +10,24 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.9.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <!--<Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
+    <Exec Command="$(NSwagExe_Net70) run nswag.json /variables:Configuration=$(Configuration)" />
+    <RemoveDir Directories="$(OutDir)References" />
+  </Target>-->
+
+  <Target Name="NSwag" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug' ">
+    <Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run nswag.json /variables:Configuration=$(Configuration)" />
+  </Target>
 
 </Project>
