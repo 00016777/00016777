@@ -16,6 +16,8 @@ namespace Restaurant.Domain.Entities.Identity
 
         public string FullName { get; set; } = string.Empty;
 
+        public string Email { get; set; }
+
         public void UpdateActive()
         {
             LastActive = DateTime.Now;

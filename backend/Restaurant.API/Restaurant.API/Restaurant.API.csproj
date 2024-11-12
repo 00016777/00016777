@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Restaurant.Infrastructure.csproj" />
+    <ProjectReference Include="..\Restaurant.Application\Restaurant.Application.csproj" />
   </ItemGroup>
 
   <!--<Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
