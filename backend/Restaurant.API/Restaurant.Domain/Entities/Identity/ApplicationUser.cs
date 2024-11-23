@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Restaurant.Domain.Commons;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Restaurant.Domain.Entities.Identity
 {
@@ -12,15 +10,13 @@ namespace Restaurant.Domain.Entities.Identity
 
         public int? MainRoleId { get; set; }
 
-        public int? MainPositionId { get; set; }
-
         public string FullName { get; set; } = string.Empty;
 
-        public string Email { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
 
         public void UpdateActive()
         {
-            LastActive = DateTime.Now;
+            LastActive = DateTime.UtcNow;
             CountOfEnter += 1;
         }
     }

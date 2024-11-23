@@ -20,25 +20,25 @@ namespace Restaurant.Infrastructure.DbContexts
                 {
                     Id = 1,
                     Name = Roles.Admin,
-                    NormalizedName = Roles.Admin,
+                    NormalizedName = Roles.Admin.ToUpper(),
                     ConcurrencyStamp = "1"
                 }, new ApplicationRole
                 {
                     Id = 2,
                     Name = Roles.Manager,
-                    NormalizedName = Roles.Manager,
+                    NormalizedName = Roles.Manager.ToUpper(),
                     ConcurrencyStamp = "2"
                 }, new ApplicationRole
                 {
                     Id = 3,
                     Name = Roles.Suplier,
-                    NormalizedName = Roles.Suplier,
+                    NormalizedName = Roles.Suplier.ToUpper(),
                     ConcurrencyStamp = "3"
                 }, new ApplicationRole
                 {
                     Id = 4,
                     Name = Roles.Student,
-                    NormalizedName = Roles.Student,
+                    NormalizedName = Roles.Student.ToUpper(),
                     ConcurrencyStamp = "4"
                 });
             });
@@ -53,12 +53,12 @@ namespace Restaurant.Infrastructure.DbContexts
                 users.HasData(new ApplicationUser
                 {
                     Id = 1,
-                    UserName = "admin",
-                    NormalizedUserName = "admin",
-                    Email = "admin",
-                    NormalizedEmail = "admin",
+                    UserName = Roles.Admin,
+                    NormalizedUserName = Roles.Admin.ToUpper(),
+                    Email = "admin@gmail.com",
+                    NormalizedEmail = "admin@gmail.com".ToUpper(),
                     EmailConfirmed = true,
-                    PasswordHash = hashHelper.HashPassword(null, "00016777"),
+                    PasswordHash = hashHelper.HashPassword(null!, "00016777"),
                     SecurityStamp = string.Empty
                 });
             });

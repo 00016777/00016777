@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Restaurant.Application.Models
+namespace Restaurant.Application.Models.Identities
 {
     public class Login
     {
@@ -9,6 +9,11 @@ namespace Restaurant.Application.Models
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; } = string.Empty;
+    }
+
+    public class ChangePassword : Login
+    {
+        public string PasswordOld { get; set; } = string.Empty;
     }
 
     public class MainRole
