@@ -42,7 +42,7 @@ public class AccountController : BaseController
     public async Task<IActionResult> UpdateUser()
         => Ok(await _identityService.UpdateUser(UserDto));
 
-    [HttpPost("ChooseMainRole")]
+    [HttpPost("ChooseMainRole"), AuthorizedRoles(Roles.Admin)]
     public async Task<IActionResult> ChooseMainRole([FromBody] MainRole mainRole)
         => Ok(await _identityService.ChooseMainRole(mainRole));
 
