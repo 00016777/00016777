@@ -145,13 +145,13 @@ namespace Restaurant.Application.IdentityServices
 
             var newUser = new ApplicationUser
             {
-                FullName = registerDto.Username,
+                FullName = registerDto.Fullname,
                 Email = registerDto.Email,
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 UserName = registerDto.Username,
                 LockoutEnabled = false,
                 LastActive = DateTime.UtcNow,
-               MainRoleId = role!.Id
+                MainRoleId = role!.Id
             };
 
             var isRegistered = await _userManager.CreateAsync(newUser,registerDto.Password);

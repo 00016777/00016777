@@ -45,6 +45,7 @@ public static class TokenExtension
             new (ClaimTypes.Name, user.UserName!),
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new ("FullName", user.FullName),
+            new ("MainRoleId", user.MainRoleId?.ToString()!),
             new (ClaimTypes.Email, user.Email!),
             new ("Id",user.Id.ToString()),
         };
@@ -59,7 +60,7 @@ public static class TokenExtension
 
         foreach (var role in userRoles)
         {
-            _claims.Add(new("AllRoles", role));
+            _claims.Add(new Claim("AllRoles", role));
         }
 
         if (user.MainRoleId == null && userRoles.Count > 0)
@@ -95,7 +96,9 @@ public static class TokenExtension
         {
             Id = int.Parse(claims.FirstOrDefault(x => x.Type == "Id")?.Value ?? "0"),
             FullName = claims.FirstOrDefault(x => x.Type == "FullName")?.Value ?? string.Empty,
+            MainRoleId = int.Parse(claims.FirstOrDefault(x => x.Type == "MainRoleId")?.Value!),
             Email = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value ?? string.Empty,
+            Roles = claims.Where(x => x.Type == "AllRoles").Select(x => x.Value).ToArray(),
             UserName = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value ?? string.Empty
         };
 

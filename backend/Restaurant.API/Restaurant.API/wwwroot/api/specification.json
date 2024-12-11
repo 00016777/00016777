@@ -28,10 +28,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -61,10 +60,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/TokenModel"
                 }
               }
             }
@@ -82,10 +80,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/TokenModel"
                 }
               }
             }
@@ -115,10 +112,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -155,10 +151,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -193,10 +188,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "type": "boolean"
                 }
               }
             }
@@ -214,10 +208,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/UserDto"
                 }
               }
             }
@@ -247,15 +240,21 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/TokenModel"
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "admin"
+            ]
+          }
+        ]
       }
     },
     "/api/Account/ChangePassword": {
@@ -280,6 +279,46 @@
           "200": {
             "description": "",
             "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/UserProfile": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_UserProfile",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/Test": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_Test",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
               "application/octet-stream": {
                 "schema": {
                   "type": "string",
@@ -294,6 +333,18 @@
   },
   "components": {
     "schemas": {
+      "Response": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
       "Register": {
         "type": "object",
         "additionalProperties": false,
@@ -320,6 +371,19 @@
           }
         }
       },
+      "TokenModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "expiration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "Login": {
         "type": "object",
         "additionalProperties": false,
@@ -335,6 +399,42 @@
           "password": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "mainRoleId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
           }
         }
       },

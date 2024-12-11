@@ -110,7 +110,8 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../../../frontend/RestaurantManagementF/src/NSwag/nswag-api-restaurant.ts"
+      //"output": "../../../frontend/RestaurantManagementF/src/NSwag/nswag-api-restaurant.ts",
+      "output": "../../../frontend/RestaurantF/src/NSwag/nswag-api-restaurant.ts"
     }
   }
 }

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Builder;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using Restaurant.Application;
