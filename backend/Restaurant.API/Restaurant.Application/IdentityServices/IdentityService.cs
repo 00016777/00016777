@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Restaurant.Application.Models;
 using Restaurant.Application.Models.Identities;
@@ -130,7 +132,7 @@ namespace Restaurant.Application.IdentityServices
             return await TokenExtension.GetToken(user, _userManager, _roleManager, _jwtSetting);
         }
 
-        public async Task<Response> Register(Register registerDto, UserDto userDto)
+        public async Task<Response> Register(Register registerDto)
         {
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
 
@@ -154,11 +156,56 @@ namespace Restaurant.Application.IdentityServices
                 MainRoleId = role!.Id
             };
 
-            var isRegistered = await _userManager.CreateAsync(newUser,registerDto.Password);
+            var isRegistered = await _userManager.CreateAsync(newUser, registerDto.Password);
+
+            await AddUserToRole(role?.Name!, newUser);
 
             return isRegistered.Succeeded
                ? new Response { Status = Statuses.Success, Message = "Successfully registered" }
                : new Response { Status = Statuses.Error, Message = "Registration failed ! " };
+        }
+
+        private async Task<Response> AddUserToRoles(IEnumerable<string> roles, ApplicationUser user, UserDto currentUser)
+        {
+            bool userCanCreateRole = RestaurantAdmin.Admins.Contains(currentUser.UserName.ToLower());
+
+            var rolesOfUser = await _userManager.GetRolesAsync(user);
+
+            if (userCanCreateRole)
+            {
+                await _userManager.RemoveFromRolesAsync(user, rolesOfUser);
+                var result = await _userManager.AddToRolesAsync(user, roles);
+                if (result.Succeeded)
+                    return new Response { Status = Statuses.Success, Message = "Ok" };
+            }
+
+
+            return new Response
+            {
+                Status = Statuses.Error,
+                Message = "Something went wrong while adding role !"
+            };
+        }
+
+        private async Task<Response> AddUserToRole(string role, ApplicationUser user)
+        {
+
+            var rolesOfUser = await _userManager.GetRolesAsync(user);
+
+            await _userManager.RemoveFromRolesAsync(user, rolesOfUser);
+            
+            rolesOfUser.Add(role);
+            
+            var result = await _userManager.AddToRolesAsync(user, rolesOfUser);
+            if (result.Succeeded)
+                return new Response { Status = Statuses.Success, Message = "Ok" };
+
+
+            return new Response
+            {
+                Status = Statuses.Error,
+                Message = "Something went wrong while adding role !"
+            };
         }
 
         public async Task<UserDto> UpdateUser(UserDto userDto)
@@ -221,6 +268,17 @@ namespace Restaurant.Application.IdentityServices
             return isAdded.Succeeded
                 ? new Response { Status = Statuses.Success, Message = "Roles added successfully" }
                 : new Response { Status = Statuses.Error, Message = "Adding roles failed !" };
+        }
+
+        public async Task<string> GetMainRole(int mainRoleId)
+        {
+            if (mainRoleId <= 0)
+                return await Task.FromResult("");
+
+            var role = await _roleManager.Roles
+                .FirstOrDefaultAsync(x => x.Id == mainRoleId);
+
+            return await Task.FromResult(role?.Name!);
         }
     }
 }

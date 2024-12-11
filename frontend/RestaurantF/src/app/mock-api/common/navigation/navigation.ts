@@ -11,7 +11,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         ],
         id   : 'example',
         translate: 'Example',
-        title: 'Example',
+        title: 'Example 1',
         type : 'basic',
         icon : 'heroicons_outline:chart-pie',
         link : '/example'

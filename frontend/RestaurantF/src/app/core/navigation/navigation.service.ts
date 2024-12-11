@@ -7,6 +7,9 @@ import { User } from '../user/user.types';
 import { InitialNavigations } from 'app/mock-api/common/navigation/navigation-provider';
 import { Navigation } from './navigation.types';
 import { Observable, of, ReplaySubject} from 'rxjs';
+import { user } from 'app/mock-api/common/user/data';
+import { AccountClient } from 'NSwag/nswag-api-restaurant';
+import { Roles } from '../Enums/Roles';
 
 
 @Injectable({
@@ -24,6 +27,7 @@ export class NavigationService {
         private userService: UserService,
         private _translocoService: TranslocoService,
         private _fuseNavigationService: FuseNavigationService,
+        private accountClient: AccountClient
     ) {
         this.navigation = InitialNavigations.navigations;
     }
@@ -206,9 +210,9 @@ export class NavigationService {
     ): FuseNavigationItem[] {
         return items?.map(item => {
             let permitted = true;
-
+        
             if (item.hasOwnProperty('key'))
-                permitted = item.key.includes(_user?.mainRoleId);
+                permitted = item.key.includes(this.getMainRole(_user?.mainRoleId));
 
             if (!permitted) return {} as FuseNavigationItem;
 
@@ -220,6 +224,15 @@ export class NavigationService {
 
             return item;
         });
+    }
+
+    private getMainRole(roleId: number): string {
+        switch(roleId){
+            case 1: return "Admin";
+            case 2: return "Manager";
+            case 3: return "Suplier";
+            case 4: return "Student";
+        }
     }
 
     private _changeTitle(navigation: FuseNavigationItem[], lang: string): void {

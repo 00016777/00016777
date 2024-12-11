@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AccountClient, UserDto } from 'NSwag/nswag-api-restaurant';
-import { map, Observable, of, ReplaySubject, tap } from 'rxjs';
+import { map, Observable, of, ReplaySubject, switchMap, tap } from 'rxjs';
 import { User } from './user.types';
 
 @Injectable({providedIn: 'root'})
 export class UserService
 {
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
+    private _mainRole: ReplaySubject<string> = new ReplaySubject<string>(1);
 
     /**
      * Constructor
@@ -38,6 +39,14 @@ export class UserService
         return this._user.asObservable();
     }
 
+    set mainRole(role: string){
+        this._mainRole.next(role);
+    }
+
+    get mainRole$(): Observable<string>{
+        return this._mainRole.asObservable();
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -50,10 +59,10 @@ export class UserService
         return this.accountClient.userProfile().pipe(
             tap((user) =>
             {
-                this._user.next(user);
+                this.user = user;
 
                 return user;
-            }),
+            })
         );
         
     }

@@ -19,7 +19,7 @@ public class AccountController : BaseController
 
     [HttpPost("Register"), AllowAnonymous]
     public async Task<Response> Register([FromBody] Register register)
-        => await _identityService.Register(register, UserDto);
+        => await _identityService.Register(register);
 
     [HttpPost("Login"), AllowAnonymous]
     public async Task<TokenModel> Login([FromBody] Login login)
@@ -45,7 +45,8 @@ public class AccountController : BaseController
     public async Task<UserDto> UpdateUser()
         => await _identityService.UpdateUser(UserDto);
 
-    [HttpPost("ChooseMainRole"), AuthorizedRoles(Roles.Admin)]
+    [HttpPost("ChooseMainRole")]
+    [Authorize]
     public async Task<TokenModel> ChooseMainRole([FromBody] MainRole mainRole)
         => await _identityService.ChooseMainRole(mainRole);
 
@@ -60,4 +61,9 @@ public class AccountController : BaseController
     [HttpGet("Test")]
     public IActionResult Test()
         => Ok("");
+
+    [HttpGet("GetMainRole")]
+    [AuthorizedRoles(Roles.Admin, Roles.Manager, Roles.Manager, Roles.Student)]
+    public async Task<string> GetMainRoleById(int roleId)
+        => await _identityService.GetMainRole(roleId);
 }

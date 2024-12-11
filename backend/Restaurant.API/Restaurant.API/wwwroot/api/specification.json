@@ -250,9 +250,7 @@
         },
         "security": [
           {
-            "JWT": [
-              "admin"
-            ]
+            "JWT": []
           }
         ]
       }
@@ -328,6 +326,46 @@
             }
           }
         }
+      }
+    },
+    "/api/Account/GetMainRole": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_GetMainRoleById",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "admin",
+              "manager",
+              "student"
+            ]
+          }
+        ]
       }
     }
   },

@@ -8,7 +8,7 @@ namespace Restaurant.Application.IdentityServices
     {
         public Task<TokenModel> Login(Login loginDto);
 
-        public Task<Response> Register(Register registerDto, UserDto userDto);
+        public Task<Response> Register(Register registerDto);
 
         public Task<TokenModel> RefreshAccessToken(UserDto userDto);
 
@@ -25,5 +25,6 @@ namespace Restaurant.Application.IdentityServices
         public Task<Response> ChangeUserPassword(ChangePassword changePassword);
 
         public Task<Response> AddRolesToUser(int userId, List<string> roles, UserDto userDto);
+        public Task<string> GetMainRole(int mainRoleId);
     }
 }

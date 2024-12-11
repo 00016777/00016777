@@ -40,6 +40,10 @@ export class AuthService
         return localStorage.getItem('accessToken') ?? '';
     }
 
+    get authenticated$(): Observable<boolean> {
+        return this._authenticated$.asObservable();
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------

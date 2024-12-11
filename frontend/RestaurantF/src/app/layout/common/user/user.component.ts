@@ -1,5 +1,5 @@
 import { BooleanInput } from '@angular/cdk/coercion';
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
+import { AccountClient, MainRole } from 'NSwag/nswag-api-restaurant';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -17,7 +18,7 @@ import { Subject, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs       : 'user',
     standalone     : true,
-    imports        : [MatButtonModule, MatMenuModule, NgIf, MatIconModule, NgClass, MatDividerModule],
+    imports        : [MatButtonModule, MatMenuModule, NgIf, MatIconModule, NgClass, MatDividerModule, CommonModule],
 })
 export class UserComponent implements OnInit, OnDestroy
 {
@@ -38,6 +39,7 @@ export class UserComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _userService: UserService,
+        private accountClient: AccountClient
     )
     {
     }
@@ -83,7 +85,7 @@ export class UserComponent implements OnInit, OnDestroy
      *
      * @param status
      */
-    updateUserStatus(roleId: string): void
+    updateUserStatus(role: string): void
     {
         // Return if user is not available
         if ( !this.user )
@@ -91,10 +93,14 @@ export class UserComponent implements OnInit, OnDestroy
             return;
         }
 
-        // Update the user
-        this._userService.update({
-            ...this.user,
-        }).subscribe();
+        // change User main role
+        this.accountClient.chooseMainRole( {username: this.user?.userName, role: role } as MainRole)
+            .subscribe({
+                next: _=> {
+                    window.location.reload();
+                }
+            });
+
     }
 
     /**

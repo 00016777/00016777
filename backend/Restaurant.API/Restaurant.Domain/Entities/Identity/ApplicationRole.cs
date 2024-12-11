@@ -16,4 +16,12 @@ namespace Restaurant.Domain.Entities.Identity
 
         public const string Student = "student";
     }
+
+    public static class RestaurantAdmin
+    {
+        public static List<string> Admins = new List<string>()
+        {
+            "Admin"
+        };
+    }
 }
