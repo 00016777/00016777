@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AccountClient, UserDto } from 'NSwag/nswag-api-restaurant';
+import { AccountClient, BasketClient, UserDto } from 'NSwag/nswag-api-restaurant';
 import { map, Observable, of, ReplaySubject, switchMap, tap } from 'rxjs';
 import { User } from './user.types';
+import { BasketService } from 'app/modules/admin/basket/basket.service';
 
 @Injectable({providedIn: 'root'})
 export class UserService
@@ -13,8 +14,11 @@ export class UserService
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient,
-        private accountClient: AccountClient
+    constructor(
+        private _httpClient: HttpClient,
+        private accountClient: AccountClient,
+        private basketClient: BasketClient,
+        private basketService: BasketService
     )
     {
     }
@@ -60,9 +64,16 @@ export class UserService
             tap((user) =>
             {
                 this.user = user;
-
                 return user;
-            })
+            }),
+            switchMap((user) => this.basketClient.getBasket().pipe(
+                map((basket) => {
+
+                    this.basketService.basket = basket;
+
+                    return basket;
+                }) 
+            ))
         );
         
     }

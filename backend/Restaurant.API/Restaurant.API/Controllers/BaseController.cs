@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.IdentityServices;
 using Restaurant.Application.Models.Identities;
+using Restaurant.Application.Services.IdentityServices;
 
 namespace Restaurant.API.Controllers
 {

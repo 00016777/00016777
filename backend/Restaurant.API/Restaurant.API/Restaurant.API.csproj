@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>044e44db-5594-4311-bd6c-ff805b891849</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -27,6 +27,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Restaurant.Infrastructure.csproj" />
     <ProjectReference Include="..\Restaurant.Application\Restaurant.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\files\products\" />
   </ItemGroup>
 
   <!--<Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">

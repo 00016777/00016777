@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { AccountClient, Login, MainRole, Register, TokenModel } from 'NSwag/nswag-api-restaurant';
+import { AccountClient, BasketClient, Login, MainRole, Register, TokenModel } from 'NSwag/nswag-api-restaurant';
 import { catchError, map, Observable, of, ReplaySubject, switchMap, throwError } from 'rxjs';
 import { Roles } from '../Enums/Roles';
+import { BasketService } from 'app/modules/admin/basket/basket.service';
 
 @Injectable({providedIn: 'root'})
 export class AuthService
@@ -19,6 +20,7 @@ export class AuthService
         private accountClient: AccountClient,
         private _httpClient: HttpClient,
         private _userService: UserService,
+        private basketService: BasketService,
     )
     {
     }
@@ -83,8 +85,7 @@ export class AuthService
 
         return this.accountClient.login(login).pipe(
             switchMap((response: any) =>
-            {
-                debugger
+            {                
                 // Store the access token in the local storage
                 this.accessToken = response.token;
 
@@ -96,7 +97,9 @@ export class AuthService
                 this.accountClient.userProfile()
                 .subscribe((user) => {
                     this._userService.user = user;
-                })
+                });
+
+                this.basketService.getBasket();
 
                 // Return a new observable with the response
                 return of(response);
@@ -152,6 +155,8 @@ export class AuthService
                 .subscribe((user) => {
                     this._userService.user = user;
                 })
+
+                this.basketService.getBasket();
                 // Return true
                 return of(true);
             }),

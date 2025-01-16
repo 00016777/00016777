@@ -55,6 +55,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("defaultCors");
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

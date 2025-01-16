@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Restaurant.Domain.Entities.DrinkEntities;
 using Restaurant.Domain.Entities.Identity;
+using Restaurant.Domain.Entities.MealEntities;
+using System.Reflection.Emit;
 
 namespace Restaurant.Infrastructure.DbContexts
 {
@@ -10,6 +13,8 @@ namespace Restaurant.Infrastructure.DbContexts
         {
             builder.SeedRoles();
             builder.SeedAuths();
+            builder.SeedMeals();
+            builder.SeedDrinks();
         }
 
         private static void SeedRoles(this ModelBuilder builder)
@@ -19,27 +24,21 @@ namespace Restaurant.Infrastructure.DbContexts
                 roles.HasData(new ApplicationRole
                 {
                     Id = 1,
-                    Name = Roles.Admin,
-                    NormalizedName = Roles.Admin.ToUpper(),
+                    Name = Roles.Manager,
+                    NormalizedName = Roles.Manager.ToUpper(),
                     ConcurrencyStamp = "1"
                 }, new ApplicationRole
                 {
                     Id = 2,
-                    Name = Roles.Manager,
-                    NormalizedName = Roles.Manager.ToUpper(),
+                    Name = Roles.Suplier,
+                    NormalizedName = Roles.Suplier.ToUpper(),
                     ConcurrencyStamp = "2"
                 }, new ApplicationRole
                 {
                     Id = 3,
-                    Name = Roles.Suplier,
-                    NormalizedName = Roles.Suplier.ToUpper(),
-                    ConcurrencyStamp = "3"
-                }, new ApplicationRole
-                {
-                    Id = 4,
                     Name = Roles.Student,
                     NormalizedName = Roles.Student.ToUpper(),
-                    ConcurrencyStamp = "4"
+                    ConcurrencyStamp = "3"
                 });
             });
         }
@@ -53,13 +52,15 @@ namespace Restaurant.Infrastructure.DbContexts
                 users.HasData(new ApplicationUser
                 {
                     Id = 1,
-                    UserName = Roles.Admin,
-                    NormalizedUserName = Roles.Admin.ToUpper(),
-                    Email = "admin@gmail.com",
-                    NormalizedEmail = "admin@gmail.com".ToUpper(),
+                    UserName = "Hayitbek",
+                    MainRoleId = 1,
+                    FullName = "Hayitbek MIrsoatov",
+                    NormalizedUserName = "Hayitbek".ToUpper(),
+                    Email = "wuit00016777@gmail.com",
+                    NormalizedEmail = "wuit00016777@gmail.com".ToUpper(),
                     EmailConfirmed = true,
                     PasswordHash = hashHelper.HashPassword(null!, "00016777"),
-                    SecurityStamp = string.Empty
+                    SecurityStamp = "1"    
                 });
             });
 
@@ -71,10 +72,45 @@ namespace Restaurant.Infrastructure.DbContexts
                    },
                    new IdentityUserRole<int>
                    {
-                       RoleId = 2,
-                       UserId = 1,
+                       RoleId = 3,
+                       UserId = 1
                    });
         }
 
+        private static void SeedMeals(this ModelBuilder builder) 
+        {
+            builder.Entity<Meal>().HasData(
+                new Meal { Id = 1, IsCategory = true, Name = "Osh", Price = null },
+                new Meal { Id = 2, IsCategory = true, Name = "Somsa", Price = null },
+                new Meal { Id = 3, IsCategory = false, Name = "Cheeseburger", Price = 30000 },
+                new Meal { Id = 4, IsCategory = true, ParentId = 1, Name = "Samarkand Osh" },
+                new Meal { Id = 5, IsCategory = true, ParentId = 1, Name = "Andijon Osh" },
+                new Meal { Id = 6, IsCategory = false, ParentId = 2, Name = "Tandir Somsa" },
+                new Meal { Id = 7, IsCategory = false, ParentId = 4, Name = "To'y Osh" },
+                new Meal { Id = 8, IsCategory = false, ParentId = 5, Name = "Choyxona Osh" }
+            );
+        }
+        
+        private static void SeedDrinks(this ModelBuilder builder)
+        {
+            // Seed Drinks
+            builder.Entity<Drink>().HasData(
+                new Drink { 
+                    Id = 1, 
+                    Name = "Cola",
+                    Description = "cola cola",
+                    Price = null },
+                new Drink { 
+                    Id = 2, 
+                    Name = "Pepsi",
+                    Description = "pepsi pepsi",
+                    Price = null },
+
+                new Drink { Id = 3, IsCategory = true, Price = null, ParentId = 1, Name = "Can" },
+                new Drink { Id = 4, IsCategory = true, Price = null, ParentId = 2, Name = "Bottle" },
+                new Drink { Id = 5, IsCategory = false, Price = 12000, ParentId = 1, Name = "500ml" },
+                new Drink { Id = 6, IsCategory = false, Price = 11000, ParentId = 2, Name = "1L" }
+            );
+        }
     }
 }

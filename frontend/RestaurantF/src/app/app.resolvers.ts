@@ -5,6 +5,7 @@ import { NotificationsService } from 'app/layout/common/notifications/notificati
 import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.service';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 import { forkJoin } from 'rxjs';
+import { MealService } from './modules/admin/meal/meal.service';
 
 export const initialDataResolver = () =>
 {
@@ -21,5 +22,6 @@ export const initialDataResolver = () =>
         notificationsService.getAll(),
         quickChatService.getChats(),
         shortcutsService.getAll(),
+
     ]);
 };

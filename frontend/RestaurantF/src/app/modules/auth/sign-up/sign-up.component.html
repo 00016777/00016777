@@ -57,6 +57,22 @@
                     </mat-error>
                 </mat-form-field>
 
+                <!-- Role -->
+                <mat-form-field class="w-full">
+                    <mat-label>Choose Role</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:identification'"
+                        matPrefix></mat-icon>
+                    <mat-select
+                        [value]="'mainRoleId'"
+                        #buySellSelect="matSelect"
+                        [formControlName] = "'mainRoleId'">
+                        <mat-option [value]="'2'">Suplier</mat-option>
+                        <mat-option [value]="'3'">Student</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
                 <!-- Password field -->
                 <mat-form-field class="w-full">
                     <mat-label>Password</mat-label>
@@ -166,10 +182,10 @@
                 <div>Welcome to</div>
                 <div>our community</div>
             </div>
-            <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400">
+            <!-- <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400">
                 Fuse helps developers to build organized and well coded dashboards full of beautiful and rich modules.
                 Join us and start building your application today.
-            </div>
+            </div> -->
             <div class="flex items-center mt-8">
                 <div class="flex flex-0 items-center -space-x-1.5">
                     <!-- <img
@@ -185,7 +201,7 @@
                         class="flex-0 w-10 h-10 rounded-full ring-4 ring-offset-1 ring-gray-800 ring-offset-gray-800 object-cover"
                         src="assets/images/avatars/male-16.jpg"> -->
                 </div>
-                <div class="ml-4 font-medium tracking-tight text-gray-400">More than 17k people joined us, it's your turn</div>
+                <!-- <div class="ml-4 font-medium tracking-tight text-gray-400">More than 17k people joined us, it's your turn</div> -->
             </div>
         </div>
     </div>

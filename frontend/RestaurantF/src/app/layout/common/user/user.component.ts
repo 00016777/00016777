@@ -5,7 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Roles } from 'app/core/Enums/Roles';
+import { NavigationService } from 'app/core/navigation/navigation.service';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { AccountClient, MainRole } from 'NSwag/nswag-api-restaurant';
@@ -39,7 +41,9 @@ export class UserComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _userService: UserService,
-        private accountClient: AccountClient
+        private accountClient: AccountClient,
+        private _navigationService: NavigationService,
+        private _activatedRoute: ActivatedRoute,
     )
     {
     }
@@ -87,20 +91,43 @@ export class UserComponent implements OnInit, OnDestroy
      */
     updateUserStatus(role: string): void
     {
+        debugger
         // Return if user is not available
         if ( !this.user )
         {
             return;
         }
 
+        if(role.toLocaleLowerCase() == 'suplier'){
+            this.user.mainRoleId = 2;
+            this._userService.user = this.user
+        } 
+        if(role.toLocaleLowerCase() == 'student'){
+            this.user.mainRoleId = 3;
+            this._userService.user = this.user
+        } 
+        if(role.toLocaleLowerCase() == 'manager'){
+            this.user.mainRoleId = 1;
+            this._userService.user = this.user
+        } 
+
         // change User main role
         this.accountClient.chooseMainRole( {username: this.user?.userName, role: role } as MainRole)
             .subscribe({
                 next: _=> {
+                    this._userService.get().subscribe();
+                    this.accountClient.userProfile()
                     window.location.reload();
                 }
             });
+        
+        this._router.navigate([''])
+        
+        // window.location.reload();
+    }
 
+    getMainRole(role: string){
+        return this._navigationService.getMainRole(this.user?.mainRoleId).toLowerCase() === role;
     }
 
     /**

@@ -11,7 +11,7 @@ namespace Restaurant.Domain.Commons
     {
         public int Id { get; set; }
         public bool Active { get; set; } = true;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedDate { get; set; }
     }
 }

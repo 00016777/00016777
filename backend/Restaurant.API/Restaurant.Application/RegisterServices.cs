@@ -2,7 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Restaurant.Application.IdentityServices;
+using Restaurant.Application.Services.BasketServices;
+using Restaurant.Application.Services.FileServices;
+using Restaurant.Application.Services.IdentityServices;
+using Restaurant.Application.Services.MealServices;
+using Restaurant.Application.Services.OrderServices;
+using Restaurant.Application.Services.ProductServices;
 using System.Text;
 
 namespace Restaurant.Application
@@ -14,6 +19,11 @@ namespace Restaurant.Application
             IConfiguration configuration)
         {
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IMealService, MealService>();
+            services.AddScoped<IBasketService, BasketService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             // add Authentication
             services.AddAuthentication(options =>
@@ -39,6 +49,7 @@ namespace Restaurant.Application
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSetting:JWT:Secret"]!))
                 };
             });
+
 
             return services;
         }

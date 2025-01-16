@@ -3,21 +3,24 @@ import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { UserService } from './core/user/user.service';
+import { Inject } from '@angular/core';
+import { RedirectGuard } from './core/auth/guards/redirectGuard';
 
 // @formatter:off
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const appRoutes: Route[] = [
 
-    // Redirect empty path to '/example'
-    {path: '', pathMatch : 'full', redirectTo: 'example'},
+    // Redirect empty path to '/example' 
+    { path: '', pathMatch: 'full', redirectTo: 'home' },
 
     // Redirect signed-in user to the '/example'
     //
     // After the user signs in, the sign-in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'example'},
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home'},
 
     // Auth routes for guests
     {
@@ -55,6 +58,7 @@ export const appRoutes: Route[] = [
     // Landing routes
     {
         path: '',
+        canActivate: [RedirectGuard],
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -70,11 +74,11 @@ export const appRoutes: Route[] = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: LayoutComponent,
-        resolve: {
-            initialData: initialDataResolver
-        },
         children: [
-            {path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
+            {path: 'order', loadChildren: () => import('./modules/admin/order/order.routes')},
+            {path: 'basket', loadChildren: () => import('./modules/admin/basket/basket.routes')},
+            {path: 'Meal',  loadChildren: () => import('app/modules/admin/meal/meal.routs')},
+            {path: 'Product', loadChildren: () => import('app/modules/admin/product/product.route')}
         ]
     }
 ];

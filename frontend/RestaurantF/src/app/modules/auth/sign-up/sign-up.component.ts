@@ -1,9 +1,11 @@
 import { NgIf } from '@angular/common';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -12,8 +14,6 @@ import { Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { user } from 'app/mock-api/common/user/data';
-import { environemnt } from 'environments/environment';
 import { AccountClient } from 'NSwag/nswag-api-restaurant';
 
 @Component({
@@ -22,7 +22,7 @@ import { AccountClient } from 'NSwag/nswag-api-restaurant';
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations,
     standalone   : true,
-    imports      : [RouterLink, NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatCheckboxModule, MatProgressSpinnerModule],
+    imports      : [RouterLink, NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatCheckboxModule, MatProgressSpinnerModule,MatSelectModule, MatOptionModule],
 })
 export class AuthSignUpComponent implements OnInit
 {
@@ -61,6 +61,7 @@ export class AuthSignUpComponent implements OnInit
         this.signUpForm = this._formBuilder.group({
                 fullname   : ['', Validators.required],
                 username   : ['', Validators.required],
+                mainRoleId : ['', Validators.required],
                 email     : ['', [Validators.required, Validators.email]],
                 password  : ['', Validators.required],
             },
@@ -82,7 +83,6 @@ export class AuthSignUpComponent implements OnInit
             return;
         }
 
-        debugger
         // Disable the form
         this.signUpForm.disable();
 

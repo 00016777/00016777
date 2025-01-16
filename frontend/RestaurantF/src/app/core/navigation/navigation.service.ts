@@ -7,9 +7,7 @@ import { User } from '../user/user.types';
 import { InitialNavigations } from 'app/mock-api/common/navigation/navigation-provider';
 import { Navigation } from './navigation.types';
 import { Observable, of, ReplaySubject} from 'rxjs';
-import { user } from 'app/mock-api/common/user/data';
 import { AccountClient } from 'NSwag/nswag-api-restaurant';
-import { Roles } from '../Enums/Roles';
 
 
 @Injectable({
@@ -226,12 +224,11 @@ export class NavigationService {
         });
     }
 
-    private getMainRole(roleId: number): string {
+    public getMainRole(roleId: number): string {
         switch(roleId){
-            case 1: return "Admin";
-            case 2: return "Manager";
-            case 3: return "Suplier";
-            case 4: return "Student";
+            case 1: return "Manager";
+            case 2: return "Suplier";
+            case 3: return "Student";
         }
     }
 

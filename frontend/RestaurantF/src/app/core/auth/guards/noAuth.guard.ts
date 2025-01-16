@@ -16,7 +16,7 @@ export const NoAuthGuard: CanActivateFn | CanActivateChildFn = (route, state) =>
             {
                 return of(router.parseUrl(''));
             }
-
+            
             // Allow the access
             return of(true);
         }),
