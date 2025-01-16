@@ -1,0 +1,202 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <mat-drawer-container
+        class="flex-auto h-full bg-card dark:bg-transparent"
+        (backdropClick)="onBackdropClicked()">
+
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-full sm:w-100 dark:bg-gray-900"
+            [mode]="drawerMode"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col bg-gray-100 dark:bg-transparent">
+
+            <!-- Main -->
+            <div class="flex flex-col flex-auto">
+
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
+                    <!-- Title -->
+                    <div>
+                        <div class="flex flex-row text-4xl font-extrabold tracking-tight leading-none w-full">
+                            <div class="">
+                                Meals
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-0.5 font-medium text-secondary">
+                            <ng-container *ngIf="!_mealService.meals?.path?.length">
+                                {{_mealService.meals.meals?.length}} meals types, {{_mealService.meals?.mealChildren?.length}} meals
+                            </ng-container>
+                            <!-- Breadcrumbs -->
+                            <ng-container *ngIf="_mealService.meals?.path.length">
+                                <div class="flex items-center space-x-2 mt-4">
+                                    <a
+                                        class="text-primary cursor-pointer"
+                                        [routerLink]="['/Meal']">Home
+                                    </a>
+                                    <div class="">/</div>
+                                    <ng-container *ngFor="let path of _mealService.meals?.path; let last = last; trackBy: trackByFn">
+                                        <ng-container *ngIf="!last">
+                                            <a
+                                                class="text-primary cursor-pointer"
+                                                [routerLink]="['/Meal/Meal/', path.id]">{{path.name}}</a>
+                                        </ng-container>
+                                        <ng-container *ngIf="last">
+                                            <div>{{path.name}}</div>
+                                        </ng-container>
+                                        <ng-container *ngIf="!last">
+                                            <div class="">/</div>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="flex-auto ml-5 mr-5 w-[500px]">
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-rounded w-full min-w-50"
+                            subscriptSizing="dynamic">
+                            <mat-icon
+                            class="icon-size-5"
+                            matPrefix
+                            [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+                            <input
+                            matInput
+                            [formControl]="searchInputControl"
+                            [autocomplete]="'off'"
+                            [placeholder]="'Search meals'">
+                        </mat-form-field>
+                    </div>
+                    <!-- Actions -->
+                    <div *ngIf="(_userService.user$ | async)?.mainRoleId == 1" class="flex flex-row mt-4 sm:mt-0">
+                        <!-- Add Category button -->
+                        <button
+                            class="mr-1"
+                            (click)="addCategory()"
+                            mat-flat-button
+                            [color]="'accent'">
+                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                            <span class="ml-2 mr-1">Add Category</span>
+                        </button>
+                        <!-- Add Meal button -->
+                        <button
+                            (click)="addMeal()"
+                            mat-flat-button
+                            [color]="'primary'">
+                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                            <span class="ml-2 mr-1">Add meal</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Meals list -->
+                <ng-container *ngIf="(_mealService.meals?.meals?.length > 0 || _mealService.meals?.mealChildren?.length > 0); else noItems">
+                    <div class="p-6 md:p-8 space-y-8">
+                        <!-- Meals -->
+                        <ng-container *ngIf="_mealService.meals?.meals?.length > 0">
+                            <div>
+                                <div class="font-medium">Meals Categories</div>
+                                <div
+                                    class="flex flex-wrap -m-2 mt-2">
+                                    <ng-container *ngFor="let meal of _mealService.meals?.meals; trackBy:trackByFn">
+                                        <div class="relative w-[170px] h-[170px] m-2 p-4 shadow rounded-2xl bg-card">
+                                            <a
+                                                class="absolute z-20 top-1.5 right-1.5 w-8 h-8 min-h-8"
+                                                (click)="$event.preventDefault()"
+                                                [routerLink]="['./details/', meal.id]"
+                                                mat-icon-button>
+                                                <mat-icon
+                                                    class="icon-size-5"
+                                                    [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
+                                            </a>
+                                            <a
+                                                class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
+                                                [routerLink]="['/Meal/Meal/', meal.id]">
+                                                <div class="aspect-[9/6]">
+                                                    <div class="flex items-center justify-center h-full">
+                                                        <!-- Icon -->
+                                                        <mat-icon
+                                                            class="icon-size-14 text-hint opacity-50"
+                                                            [svgIcon]="'heroicons_solid:folder'"></mat-icon>
+                                                    </div>
+                                                </div>
+                                                <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                                    <div
+                                                        class="truncate"
+                                                        [matTooltip]="meal.name">{{meal.name}}</div>
+                                                    <ng-container *ngIf="meal.description">
+                                                        <div class="text-secondary truncate">{{meal.description}}</div>
+                                                    </ng-container>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <!-- Meal children -->
+                        <ng-container *ngIf="_mealService.meals?.mealChildren.length > 0">
+                            <div>
+                                <div class="font-medium">Meals</div>
+                                <div
+                                    class="flex flex-wrap -m-2 mt-2">
+                                    <ng-container *ngFor="let mealCh of _mealService.meals?.mealChildren; trackBy:trackByFn">
+                                        <a
+                                            class="flex flex-col w-[200px] h-[200px] m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+                                            [routerLink]="['./details/', mealCh?.id]">
+                                            <div class="aspect-[9/6]">
+                                                <div class="flex items-center justify-center h-full">
+                                                    <!-- Icons -->
+                                                    <div class="relative">
+                                                        <mat-icon
+                                                            *ngIf="mealCh?.images?.length == 0"
+                                                            class="icon-size-24 text-hint"
+                                                            [svgIcon]="'heroicons_outline:document'">
+                                                        </mat-icon>
+                                                        <img
+                                                            *ngIf="mealCh?.images?.length > 0"
+                                                            class="w-40 h-30 rounded object-cover"
+                                                            [src]="_mealService.getMealUrl(mealCh?.images[0])">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                                <div
+                                                    class="truncate"
+                                                    [matTooltip]="mealCh?.name">{{mealCh?.name}}</div>
+                                                <ng-container *ngIf="mealCh?.description">
+                                                    <div class="text-secondary truncate">Price: {{mealCh?.price}} sum</div>
+                                                </ng-container>
+                                            </div>
+                                        </a>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+
+                <!-- No items template -->
+                <ng-template #noItems>
+                    <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+                        <mat-icon
+                            class="icon-size-24"
+                            [svgIcon]="'heroicons_outline:folder-open'"></mat-icon>
+                        <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">There are no meals or meal types!</div>
+                    </div>
+                </ng-template>
+
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
