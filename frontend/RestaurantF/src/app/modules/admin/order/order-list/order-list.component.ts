@@ -58,19 +58,19 @@ export class OrderListComponent implements OnInit {
       private _activatedRoute: ActivatedRoute,) {
     }
 
-    ngOnInit(): void 
-    { 
+    ngOnInit(): void
+    {
       let userL;
       this.userService.user$.subscribe((user) => {
-        
+
         userL = user
 
-        if(user.mainRoleId == 1){
+        if(user.mainRoleId == 1 || user?.mainRoleId == 2){
           this.orderService.getAllOrders();
         }
         else this.orderService.getOrdersByUser();
       });
-      
+
       this.orderService.orders$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((orders: OrderDto[]) => {
@@ -80,7 +80,7 @@ export class OrderListComponent implements OnInit {
             const dateB = new Date(b.orderDate).getTime();
             return dateB - dateA;
         });
-          
+
         if(userL?.mainRoleId == 2){
           orders = orders.filter(o => o.orderDetailDtos.some(od => od.productId != null && od.mealId == null))
         }
@@ -91,9 +91,9 @@ export class OrderListComponent implements OnInit {
 
         this.orderService.orders = orders
         this.orders = orders;
-        
+
           this._changeDetectorRef.markForCheck();
-        
+
         });
 
         this.searchInputControl.valueChanges
@@ -115,7 +115,7 @@ export class OrderListComponent implements OnInit {
               {
                   // Remove the selected contact when drawer closed
                   this.selectedOrder = null;
-  
+
                   // Mark for check
                   this._changeDetectorRef.markForCheck();
               }
@@ -133,7 +133,7 @@ export class OrderListComponent implements OnInit {
       2: 'Completed',
       3: 'Cancelled',
     };
-    
+
     getStatusLabel(status: number): string {
       return this.statusMap[status] || '';
     }
@@ -146,7 +146,7 @@ export class OrderListComponent implements OnInit {
     }
 
     onStatusChange(value: number, order: OrderDto): void {
-      
+
       order.status = value;
 
       this.orderService.saveOrder(order).subscribe();
